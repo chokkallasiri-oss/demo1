@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - LUXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #d4a574;
+            --accent: #8b6f47;
+            --bg-light: #f8f5f2;
+            --text-dark: #2d2d2d;
+            --text-light: #6b6b6b;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-top: 80px;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+            background: white;
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .breadcrumb {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--secondary);
+        }
+
+        /* Filter Section */
+        .products-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 3rem;
+        }
+
+        .filters {
+            background: white;
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .filter-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .filter-group h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            margin-right: 0.8rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .price-range {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .filter-button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .filter-button:hover {
+            background: var(--accent);
+        }
+
+        /* Products Grid */
+        .products-content {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-count {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .sort-dropdown {
+            padding: 0.8rem 1.5rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .product-card {
+            background: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .product-category {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .stars {
+            color: var(--secondary);
+        }
+
+        .rating-count {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .current-price {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .original-price {
+            font-size: 1rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .quick-add {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: background 0.3s ease;
+        }
+
+        .quick-add:hover {
+            background: var(--secondary);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .page-btn {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover,
+        .page-btn.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f0f0f;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 968px) {
+            .products-section {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                position: static;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">LUXE</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="cart-icon">
+                <a href="cart.html" style="text-decoration: none; color: var(--text-dark);">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Our Collection</h1>
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> / Products
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-section">
+        <!-- Filters Sidebar -->
+        <aside class="filters">
+            <div class="filter-group">
+                <h3>Category</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="women">
+                    <label for="women">Women's Clothing</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="men">
+                    <label for="men">Men's Clothing</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="accessories">
+                    <label for="accessories">Accessories</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="shoes">
+                    <label for="shoes">Shoes</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Price Range</h3>
+                <div class="price-range">
+                    <input type="number" class="price-input" placeholder="Min" min="0">
+                    <input type="number" class="price-input" placeholder="Max" min="0">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Size</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="xs">
+                    <label for="xs">XS</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="s">
+                    <label for="s">S</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="m">
+                    <label for="m">M</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="l">
+                    <label for="l">L</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="xl">
+                    <label for="xl">XL</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3>Color</h3>
+                <div class="filter-option">
+                    <input type="checkbox" id="black">
+                    <label for="black">Black</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="white">
+                    <label for="white">White</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="beige">
+                    <label for="beige">Beige</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brown">
+                    <label for="brown">Brown</label>
+                </div>
+            </div>
+
+            <button class="filter-button">APPLY FILTERS</button>
+        </aside>
+
+        <!-- Products Grid -->
+        <div class="products-content">
+            <div class="products-header">
+                <div class="results-count">Showing 12 of 48 products</div>
+                <select class="sort-dropdown">
+                    <option>Sort by: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Newest First</option>
+                    <option>Best Selling</option>
+                </select>
+            </div>
+
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <span class="product-badge">NEW</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23d4a574' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ESilk Blouse%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Women's Tops</div>
+                        <h3 class="product-title">Elegant Silk Blouse</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(124)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$129.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%238b6f47' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ELeather Jacket%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Men's Outerwear</div>
+                        <h3 class="product-title">Premium Leather Jacket</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(89)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$449.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <span class="product-badge">SALE</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23a89077' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EDesigner Bag%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Accessories</div>
+                        <h3 class="product-title">Designer Handbag</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(203)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$299.00</span>
+                            <span class="original-price">$399.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23c9b8a0' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ECashmere Sweater%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Women's Knitwear</div>
+                        <h3 class="product-title">Cashmere Sweater</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(156)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$199.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23b8a896' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ETailored Trousers%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Men's Pants</div>
+                        <h3 class="product-title">Tailored Trousers</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(78)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$179.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <span class="product-badge">NEW</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%239d8670' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EWool Coat%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Women's Coats</div>
+                        <h3 class="product-title">Wool Blend Coat</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(92)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$389.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23c4b5a4' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ESuede Loafers%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Men's Shoes</div>
+                        <h3 class="product-title">Suede Loafers</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(167)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$249.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <span class="product-badge">SALE</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23a3927f' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ESilk Scarf%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Accessories</div>
+                        <h3 class="product-title">Silk Print Scarf</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(45)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$89.00</span>
+                            <span class="original-price">$119.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 9 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23d1c3b3' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3ELinen Dress%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Women's Dresses</div>
+                        <h3 class="product-title">Linen Midi Dress</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(134)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$169.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 10 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23998875' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EOxford Shirt%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Men's Shirts</div>
+                        <h3 class="product-title">Classic Oxford Shirt</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(211)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$99.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 11 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <span class="product-badge">NEW</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%23bfac99' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EAnkle Boots%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Women's Shoes</div>
+                        <h3 class="product-title">Leather Ankle Boots</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-count">(98)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$279.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+
+                <!-- Product 12 -->
+                <div class="product-card" onclick="location.href='product-detail.html'">
+                    <div class="product-image">
+                        <button class="wishlist-btn">♡</button>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect fill='%238d7965' width='400' height='500'/%3E%3Ctext x='50%25' y='50%25' font-size='20' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EWallet%3C/text%3E%3C/svg%3E" alt="Product">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Accessories</div>
+                        <h3 class="product-title">Leather Wallet</h3>
+                        <div class="product-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-count">(187)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$119.00</span>
+                        </div>
+                        <button class="quick-add" onclick="event.stopPropagation(); alert('Added to cart!');">ADD TO CART</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="page-btn">← Prev</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LUXE</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6;">
+                    Premium fashion for the discerning individual. Curated collections that define modern elegance.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Pinterest</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LUXE. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
