@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - LUXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #d4a574;
+            --accent: #8b6f47;
+            --bg-light: #f8f5f2;
+            --text-dark: #2d2d2d;
+            --text-light: #6b6b6b;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 165, 116, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 120px auto 2rem;
+            padding: 0 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--secondary);
+        }
+
+        /* Product Section */
+        .product-container {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .thumbnails {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 100px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .thumbnail.active {
+            border-color: var(--secondary);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-image {
+            flex: 1;
+            height: 600px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Product Info */
+        .product-details {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .rating-text {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        .product-description {
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Size & Color Selection */
+        .option-group {
+            margin-bottom: 2rem;
+        }
+
+        .option-label {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+            color: var(--primary);
+        }
+
+        .size-options,
+        .color-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .size-btn,
+        .color-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .size-btn:hover,
+        .size-btn.active {
+            border-color: var(--secondary);
+            background: var(--secondary);
+            color: white;
+        }
+
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .color-btn.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Quantity Selector */
+        .quantity-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+        }
+
+        .qty-btn {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background 0.3s ease;
+        }
+
+        .qty-btn:hover {
+            background: var(--bg-light);
+        }
+
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .add-to-cart,
+        .buy-now {
+            flex: 1;
+            padding: 1.2rem;
+            border: 2px solid var(--secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .add-to-cart:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .buy-now {
+            background: white;
+            color: var(--secondary);
+        }
+
+        .buy-now:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .wishlist-btn {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            border-color: var(--secondary);
+            color: var(--secondary);
+        }
+
+        /* Product Features */
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            padding: 2rem 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Tabs Section */
+        .tabs-section {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--secondary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 3rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Reviews */
+        .reviews-summary {
+            display: flex;
+            gap: 3rem;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .overall-rating {
+            text-align: center;
+        }
+
+        .rating-number {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .rating-stars {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin: 0.5rem 0;
+        }
+
+        .review-bars {
+            flex: 1;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .bar-label {
+            width: 60px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .bar {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--secondary);
+        }
+
+        .bar-count {
+            width: 40px;
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Review Form */
+        .review-form {
+            background: var(--bg-light);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .review-form h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.2s ease;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: var(--secondary);
+        }
+
+        .submit-btn {
+            padding: 1rem 2.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Individual Reviews */
+        .review {
+            padding: 2rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .review-stars {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .review-text {
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f0f0f;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 968px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .image-gallery {
+                flex-direction: column;
+            }
+
+            .thumbnails {
+                flex-direction: row;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .product-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">LUXE</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="cart-icon">
+                <a href="cart.html" style="text-decoration: none; color: var(--text-dark);">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> / <a href="products.html">Products</a> / Elegant Silk Blouse
+    </div>
+
+    <!-- Product Section -->
+    <div class="product-container">
+        <!-- Image Gallery -->
+        <div class="image-gallery">
+            <div class="thumbnails">
+                <div class="thumbnail active">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='100'%3E%3Crect fill='%23d4a574' width='80' height='100'/%3E%3C/svg%3E" alt="Thumbnail 1">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='100'%3E%3Crect fill='%23c9b8a0' width='80' height='100'/%3E%3C/svg%3E" alt="Thumbnail 2">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='100'%3E%3Crect fill='%23b8a896' width='80' height='100'/%3E%3C/svg%3E" alt="Thumbnail 3">
+                </div>
+                <div class="thumbnail">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='100'%3E%3Crect fill='%23a89077' width='80' height='100'/%3E%3C/svg%3E" alt="Thumbnail 4">
+                </div>
+            </div>
+            <div class="main-image">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Crect fill='%23d4a574' width='600' height='600'/%3E%3Ctext x='50%25' y='50%25' font-size='32' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='Arial'%3EElegant Silk Blouse%3C/text%3E%3C/svg%3E" alt="Product">
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details">
+            <span class="product-badge">NEW ARRIVAL</span>
+            <h1 class="product-title">Elegant Silk Blouse</h1>
+            
+            <div class="product-rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-text">4.8 (124 reviews)</span>
+            </div>
+
+            <div class="product-price">$129.00</div>
+
+            <p class="product-description">
+                Crafted from premium mulberry silk, this elegant blouse embodies timeless sophistication. The luxurious fabric drapes beautifully, offering unparalleled comfort and a refined aesthetic. Features include a classic collar, mother-of-pearl buttons, and subtle gathering at the shoulders for a flattering silhouette. Perfect for both professional settings and evening occasions.
+            </p>
+
+            <!-- Size Selection -->
+            <div class="option-group">
+                <label class="option-label">Select Size</label>
+                <div class="size-options">
+                    <button class="size-btn">XS</button>
+                    <button class="size-btn active">S</button>
+                    <button class="size-btn">M</button>
+                    <button class="size-btn">L</button>
+                    <button class="size-btn">XL</button>
+                </div>
+            </div>
+
+            <!-- Color Selection -->
+            <div class="option-group">
+                <label class="option-label">Select Color</label>
+                <div class="color-options">
+                    <button class="color-btn active" style="background: #d4a574;"></button>
+                    <button class="color-btn" style="background: #1a1a1a;"></button>
+                    <button class="color-btn" style="background: #f8f5f2;"></button>
+                    <button class="color-btn" style="background: #8b6f47;"></button>
+                </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="quantity-group">
+                <label class="option-label">Quantity</label>
+                <div class="quantity-selector">
+                    <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
+                    <input type="number" class="qty-input" value="1" min="1" id="quantity">
+                    <button class="qty-btn" onclick="updateQuantity(1)">+</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="add-to-cart" onclick="addToCart()">ADD TO CART</button>
+                <button class="buy-now" onclick="location.href='checkout.html'">BUY NOW</button>
+                <button class="wishlist-btn">♡</button>
+            </div>
+
+            <!-- Product Features -->
+            <div class="product-features">
+                <div class="feature">
+                    <span class="feature-icon">🚚</span>
+                    <span class="feature-text">Free shipping on orders over $100</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">↩️</span>
+                    <span class="feature-text">30-day returns & exchanges</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">✓</span>
+                    <span class="feature-text">Authenticity guaranteed</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📦</span>
+                    <span class="feature-text">Premium gift packaging</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="tabs-section">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab(0)">Description</button>
+            <button class="tab" onclick="switchTab(1)">Specifications</button>
+            <button class="tab" onclick="switchTab(2)">Reviews (124)</button>
+        </div>
+
+        <!-- Description Tab -->
+        <div class="tab-content active">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1.5rem;">Product Description</h3>
+            <p style="line-height: 1.8; color: var(--text-light); margin-bottom: 1.5rem;">
+                Experience the pinnacle of luxury with our Elegant Silk Blouse, meticulously crafted from 100% mulberry silk. This exquisite piece represents the perfect fusion of traditional craftsmanship and contemporary design, offering a versatile addition to your wardrobe that transcends seasons and occasions.
+            </p>
+            <p style="line-height: 1.8; color: var(--text-light); margin-bottom: 1.5rem;">
+                The blouse features a classic collar design with expert tailoring that ensures a flattering fit across all body types. Mother-of-pearl buttons add a touch of understated elegance, while the subtle gathering at the shoulders creates beautiful draping and movement. The silk fabric naturally regulates temperature, keeping you comfortable throughout the day.
+            </p>
+            <h4 style="font-weight: 600; margin: 1.5rem 0 1rem;">Care Instructions:</h4>
+            <ul style="line-height: 1.8; color: var(--text-light); margin-left: 2rem;">
+                <li>Dry clean only for best results</li>
+                <li>Hand wash in cold water if necessary</li>
+                <li>Iron on low heat while slightly damp</li>
+                <li>Store hanging to prevent wrinkles</li>
+            </ul>
+        </div>
+
+        <!-- Specifications Tab -->
+        <div class="tab-content">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1.5rem;">Specifications</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Material</td>
+                    <td style="padding: 1rem; color: var(--text-light);">100% Mulberry Silk</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Fabric Weight</td>
+                    <td style="padding: 1rem; color: var(--text-light);">19 Momme</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Country of Origin</td>
+                    <td style="padding: 1rem; color: var(--text-light);">Italy</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Fit</td>
+                    <td style="padding: 1rem; color: var(--text-light);">Regular, True to size</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Closure</td>
+                    <td style="padding: 1rem; color: var(--text-light);">Mother-of-pearl buttons</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 1rem; font-weight: 600;">Sleeve Length</td>
+                    <td style="padding: 1rem; color: var(--text-light);">Long sleeve</td>
+                </tr>
+                <tr>
+                    <td style="padding: 1rem; font-weight: 600;">Available Sizes</td>
+                    <td style="padding: 1rem; color: var(--text-light);">XS, S, M, L, XL</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div class="tab-content">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1.5rem;">Customer Reviews</h3>
+            
+            <!-- Reviews Summary -->
+            <div class="reviews-summary">
+                <div class="overall-rating">
+                    <div class="rating-number">4.8</div>
+                    <div class="rating-stars">★★★★★</div>
+                    <div style="color: var(--text-light); font-size: 0.9rem;">124 reviews</div>
+                </div>
+                <div class="review-bars">
+                    <div class="rating-bar">
+                        <span class="bar-label">5 stars</span>
+                        <div class="bar"><div class="bar-fill" style="width: 85%;"></div></div>
+                        <span class="bar-count">105</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="bar-label">4 stars</span>
+                        <div class="bar"><div class="bar-fill" style="width: 10%;"></div></div>
+                        <span class="bar-count">12</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="bar-label">3 stars</span>
+                        <div class="bar"><div class="bar-fill" style="width: 3%;"></div></div>
+                        <span class="bar-count">4</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="bar-label">2 stars</span>
+                        <div class="bar"><div class="bar-fill" style="width: 2%;"></div></div>
+                        <span class="bar-count">2</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="bar-label">1 star</span>
+                        <div class="bar"><div class="bar-fill" style="width: 1%;"></div></div>
+                        <span class="bar-count">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Write a Review Form -->
+            <div class="review-form">
+                <h3>Write a Review</h3>
+                <form onsubmit="event.preventDefault(); submitReview();">
+                    <div class="form-group">
+                        <label class="form-label">Your Rating</label>
+                        <div class="star-rating">
+                            <input type="radio" name="rating" id="star5" value="5">
+                            <label for="star5">★</label>
+                            <input type="radio" name="rating" id="star4" value="4">
+                            <label for="star4">★</label>
+                            <input type="radio" name="rating" id="star3" value="3">
+                            <label for="star3">★</label>
+                            <input type="radio" name="rating" id="star2" value="2">
+                            <label for="star2">★</label>
+                            <input type="radio" name="rating" id="star1" value="1">
+                            <label for="star1">★</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-input" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Review Title</label>
+                        <input type="text" class="form-input" placeholder="Give your review a title" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Review</label>
+                        <textarea class="form-textarea" placeholder="Share your thoughts about this product" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">SUBMIT REVIEW</button>
+                </form>
+            </div>
+
+            <!-- Existing Reviews -->
+            <div class="review">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Sarah M.</div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <div class="review-date">January 15, 2026</div>
+                </div>
+                <div class="review-text">
+                    Absolutely love this blouse! The silk is incredibly soft and the quality is outstanding. It fits perfectly and looks even better in person. I've received so many compliments. Highly recommend!
+                </div>
+            </div>
+
+            <div class="review">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Emma L.</div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <div class="review-date">January 10, 2026</div>
+                </div>
+                <div class="review-text">
+                    This is my third purchase from LUXE and they never disappoint. The craftsmanship is impeccable and the attention to detail is remarkable. Worth every penny!
+                </div>
+            </div>
+
+            <div class="review">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">Jessica R.</div>
+                        <div class="review-stars">★★★★☆</div>
+                    </div>
+                    <div class="review-date">January 5, 2026</div>
+                </div>
+                <div class="review-text">
+                    Beautiful blouse with excellent quality. The only reason I gave it 4 stars instead of 5 is that it runs slightly small. I recommend ordering one size up if you're between sizes.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LUXE</h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6;">
+                    Premium fashion for the discerning individual. Curated collections that define modern elegance.
+                </p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="cart.html">Cart</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Pinterest</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LUXE. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function updateQuantity(change) {
+            const input = document.getElementById('quantity');
+            let value = parseInt(input.value) + change;
+            if (value < 1) value = 1;
+            input.value = value;
+        }
+
+        function addToCart() {
+            alert('Product added to cart!');
+            const cartCount = document.querySelector('.cart-count');
+            cartCount.textContent = parseInt(cartCount.textContent) + 1;
+        }
+
+        function switchTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            tabs[index].classList.add('active');
+            contents[index].classList.add('active');
+        }
+
+        function submitReview() {
+            alert('Thank you for your review! It will be published after verification.');
+            document.querySelector('.review-form form').reset();
+        }
+
+        // Thumbnail image switching
+        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Size button selection
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Color button selection
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
